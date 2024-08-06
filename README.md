@@ -1,2 +1,2 @@
-# books-store-using-mongoose
-## this project is using mongodb
+# books-store
+online ecommerce book store
