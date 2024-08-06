@@ -3,15 +3,24 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const path = require('path')
 const mangoose = require('mongoose')
+const session = require('express-session')
+const MongoDbStore = require('connect-mongodb-session')(session)
 
 const adminRoutes = require('./routes/admin-routes.js')
 const shopRoutes = require('./routes/shop-routes.js')
+const authRoutes = require('./routes/auth.js')
 const errorController = require('./controllers/error.js')
 const mongoConnect = require('./util/database.js').mongoConnect
 const User = require('./models/user-model.js')
+const { request } = require('http')
 
 
 const app = express();
+
+const store = new MongoDbStore({
+    uri: 'mongodb://nisar:aseHQzUOpq2QYJOq@ac-yu89zur-shard-00-00.2kuqfqr.mongodb.net:27017,ac-yu89zur-shard-00-01.2kuqfqr.mongodb.net:27017,ac-yu89zur-shard-00-02.2kuqfqr.mongodb.net:27017/shop?ssl=true&replicaSet=atlas-48caiw-shard-0&authSource=admin&retryWrites=true&w=majority&appName=Cluster0',
+    collection: 'sessions',
+})
 app.set('view engine', 'ejs')
 app.set('views', 'views')
 
@@ -23,12 +32,21 @@ app.set('views', 'views')
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.static(path.join(__dirname, 'public')))
+app.use(session({
+    secret: 'my secret',
+    resave: false,
+    saveUninitialized: false,
+    store: store
+}))
 // app.use((req, res, next) => {
 //     console.log('in middle ware')
 //     next() // Allows the request to continue to the next moddleware in line
 // })
 app.use((req, res, next) => {
-    User.findById("66b127f55d0e4af6e39b1fac").then(user => {
+    if (!req.session.user) {
+        return next()
+    }
+    User.findById(req.session.user._id).then(user => {
         req.user = user
         next();
     }).catch(err => {
@@ -38,6 +56,7 @@ app.use((req, res, next) => {
 app.use('/admin', adminRoutes)
 
 app.use(shopRoutes)
+app.use(authRoutes)
 
 app.use(errorController.get404)
 

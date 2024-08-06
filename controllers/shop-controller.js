@@ -14,6 +14,7 @@ exports.getProducts = (req, res, next) => {
             prods: products,
             pageTitle: 'All Products',
             path: '/products',
+            isAuthenticated: req.session.isLoggedIn
         })
     }).catch(err => {
         console.log(err)
@@ -26,14 +27,16 @@ exports.getProduct = (req, res, next) => {
         return res.status(400).render('404', {
             message: 'Invalid product ID',
             pageTitle: 'Error',
-            path: '/error'
+            path: '/error',
+            isAuthenticated: req.session.isLoggedIn
         });
     }
     Product.findById(prodId).then((product) => {
         res.render('shop/product-detail', {
             product: product,
             pageTitle: product.title,
-            path: '/product'
+            path: '/product',
+            isAuthenticated: req.session.isLoggedIn
         })
     }).catch(err => {
         console.log(err)
@@ -46,6 +49,7 @@ exports.getIndex = (req, res, next) => {
             prods: products,
             pageTitle: 'Shop',
             path: '/',
+            isAuthenticated: req.session.isLoggedIn
         })
     }).catch(err => {
         console.log(err)
@@ -59,7 +63,8 @@ exports.getCart = (req, res, next) => {
         res.render('shop/cart', {
             path: '/cart',
             pageTitle: 'Your Cart',
-            products: products
+            products: products,
+            isAuthenticated: req.session.isLoggedIn
         })
     }).catch(err => {
         console.log(err)
@@ -129,7 +134,8 @@ exports.getOrders = (req, res, next) => {
         res.render('shop/orders', {
             path: '/orders',
             pageTitle: 'Orders',
-            orders: orders
+            orders: orders,
+            isAuthenticated: req.session.isLoggedIn
         })
     }).catch(err => {
         console.log(err)
