@@ -3,7 +3,6 @@ const mongodb = require('mongodb')
 const Product = require('../models/product-model')
 
 
-
 // const p = path.join(path.dirname(process.mainModule.filename), 'data', 'products.json')
 exports.getAddProduct = (req, res, next) => {
     // res.sendFile(path.join(__dirname, '../', 'views', 'add-product.html'))
@@ -34,7 +33,7 @@ exports.postAddProduct = (req, res, next) => {
         console.log('Created Product')
         res.redirect('/admin/products')
     }).catch(err => {
-        console.log(err)
+        res.redirect('/500')
     });
 
 
