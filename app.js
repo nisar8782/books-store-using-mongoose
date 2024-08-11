@@ -20,7 +20,7 @@ const { request } = require('http')
 const app = express();
 
 const store = new MongoDbStore({
-    uri: 'mongodb://nisar:aseHQzUOpq2QYJOq@ac-yu89zur-shard-00-00.2kuqfqr.mongodb.net:27017,ac-yu89zur-shard-00-01.2kuqfqr.mongodb.net:27017,ac-yu89zur-shard-00-02.2kuqfqr.mongodb.net:27017/shop?ssl=true&replicaSet=atlas-48caiw-shard-0&authSource=admin&retryWrites=true&w=majority&appName=Cluster0',
+    uri: 'connection string',
     collection: 'sessions',
 })
 const csrfProtection = csrf();
